@@ -1,72 +1,75 @@
+:root {
+    --neon-red: #E11927;
+    --chic-violet: #5A1E9D;
+    --glass-white: rgba(255, 255, 255, 0.9);
+}
+
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f2f5;
     margin: 0;
-    color: #333;
-    /* 背景圖：請確保 images/ 下有 bg_pattern.png，若沒有則會顯示純色 */
-    background-image: url('images/bg_pattern.png'); 
-    background-size: cover;
+    /* 應援色漸層背景 */
+    background: linear-gradient(135deg, var(--chic-violet), var(--neon-red));
     background-attachment: fixed;
+    color: #fff;
 }
 
 .game-container {
-    background-color: rgba(255, 255, 255, 0.95);
+    background: var(--glass-white);
     padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     text-align: center;
-    max-width: 900px;
-    width: 100%;
+    max-width: 950px;
+    width: 95%;
+    color: #333;
 }
 
 h1 {
-    color: #8a2be2;
-    margin-bottom: 20px;
+    font-size: 2.5em;
+    background: linear-gradient(to right, var(--chic-violet), var(--neon-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
 }
 
 .question-area {
     margin-bottom: 25px;
-    padding: 15px;
-    background-color: #e0e7ff;
+    padding: 20px;
+    background: #f8f0ff;
+    border-left: 5px solid var(--chic-violet);
     border-radius: 10px;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #5a1e9d;
 }
 
 #cp-question {
-    color: #d81b60;
+    font-size: 1.5em;
+    color: var(--neon-red);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
+/* 卡片排版 */
 .board {
     display: grid;
-    /* 這裡我改成用 auto-fit，在手機或不同螢幕下會自動換列，更靈活 */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-    grid-gap: 15px;
-    margin-bottom: 30px;
-    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-gap: 12px;
+    margin: 20px 0;
 }
 
 .card {
-    width: 120px;
-    height: 120px;
-    border-radius: 10px;
-    cursor: pointer;
+    aspect-ratio: 1/1;
     perspective: 1000px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    text-align: center;
-    transition: transform 0.6s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
+    cursor: pointer;
 }
 
 .card.flipped .card-inner {
@@ -78,87 +81,56 @@ h1 {
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.card-back {
+    background: var(--chic-violet) url('./images/card_back.png') no-repeat center;
+    background-size: cover;
+    border: 2px solid #fff;
 }
 
 .card-front {
-    background-color: #fff;
+    background: #fff;
     transform: rotateY(180deg);
+    border: 2px solid var(--neon-red);
 }
 
 .card-front img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
-.card-back {
-    background-color: #b0c4de;
-    /* 卡片背面：請確保 images/ 下有 card_back.png */
-    background-image: url('images/card_back.png'); 
-    background-size: cover;
-    background-position: center;
-    color: white;
-    font-size: 2em;
-}
-
-/* --- 配對成功動畫效果 --- */
-@keyframes successPulse {
-    0% { transform: scale(1); box-shadow: 0 0 0px #ff69b4; }
-    50% { transform: scale(1.1); box-shadow: 0 0 20px #ff69b4; }
+/* 消除後的精緻動畫 */
+@keyframes matched-out {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2) rotate(5deg); filter: brightness(1.5); }
     100% { transform: scale(0); opacity: 0; }
 }
 
 .card.matched {
-    animation: successPulse 0.6s forwards;
-    pointer-events: none; /* 防止再次點擊 */
+    animation: matched-out 0.6s ease-in-out forwards;
+    pointer-events: none;
 }
 
-.game-info {
-    margin-top: 20px;
-    font-size: 1.1em;
-}
-
+/* 按鈕美化 */
 #reset-button {
-    background-color: #ff69b4;
+    background: linear-gradient(to right, var(--chic-violet), var(--neon-red));
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 15px 40px;
+    border-radius: 30px;
     font-size: 1.1em;
-    margin-top: 15px;
-    transition: transform 0.2s, background-color 0.3s;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 15px rgba(225, 25, 39, 0.3);
 }
 
 #reset-button:hover {
-    background-color: #e64a9b;
-    transform: scale(1.05);
-}
-
-/* 結算彈窗 */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 400px;
-    width: 80%;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(225, 25, 39, 0.5);
 }
