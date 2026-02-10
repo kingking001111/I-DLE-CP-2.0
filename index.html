@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>(G)I-DLE CP Memory Match</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>(G)I-DLE CP 對對碰</h1>
+        <div class="question-area">
+            <p>請找出：<span id="cp-question"></span></p>
+        </div>
+        <div class="board" id="game-board">
+            </div>
+        <div class="game-info">
+            <p>已配對: <span id="matched-count">0</span> / <span id="total-pairs">0</span></p>
+            <button id="reset-button">重新開始</button>
+        </div>
+        <div id="game-over-modal" class="modal">
+            <div class="modal-content">
+                <h2>恭喜你！</h2>
+                <p>所有 CP 都配對成功了！</p>
+                <button id="close-modal-button">關閉</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
