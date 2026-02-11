@@ -5,57 +5,76 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    /* 應援色漸層背景 */
     background: linear-gradient(135deg, var(--chic-violet), var(--neon-red));
     background-attachment: fixed;
-    color: #fff;
+    color: #333;
 }
 
 .game-container {
     background: var(--glass-white);
-    padding: 30px;
+    padding: 25px;
     border-radius: 20px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     text-align: center;
-    max-width: 950px;
+    max-width: 900px;
     width: 95%;
-    color: #333;
 }
 
 h1 {
-    font-size: 2.5em;
+    font-size: 2.2em;
     background: linear-gradient(to right, var(--chic-violet), var(--neon-red));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 15px;
+    margin: 0 0 15px 0;
+}
+
+/* 音樂控制按鈕 */
+.control-btn {
+    background: rgba(90, 30, 157, 0.1);
+    border: 1px solid var(--chic-violet);
+    color: var(--chic-violet);
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.control-btn.playing {
+    background: var(--chic-violet);
+    color: white;
 }
 
 .question-area {
-    margin-bottom: 25px;
-    padding: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
     background: #f8f0ff;
-    border-left: 5px solid var(--chic-violet);
+    border-left: 6px solid var(--chic-violet);
     border-radius: 10px;
+    font-size: 1.3em;
 }
 
 #cp-question {
-    font-size: 1.5em;
+    font-weight: bold;
     color: var(--neon-red);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-/* 卡片排版 */
 .board {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 12px;
-    margin: 20px 0;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+    .board { grid-template-columns: repeat(3, 1fr); }
 }
 
 .card {
@@ -67,7 +86,7 @@ h1 {
     position: relative;
     width: 100%;
     height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-style: preserve-3d;
     cursor: pointer;
 }
@@ -82,11 +101,10 @@ h1 {
     height: 100%;
     backface-visibility: hidden;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .card-back {
-    background: var(--chic-violet) url('./images/card_back.png') no-repeat center;
+    background: var(--chic-violet) url('images/card_back.png') no-repeat center;
     background-size: cover;
     border: 2px solid #fff;
 }
@@ -104,33 +122,42 @@ h1 {
     border-radius: 10px;
 }
 
-/* 消除後的精緻動畫 */
-@keyframes matched-out {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2) rotate(5deg); filter: brightness(1.5); }
-    100% { transform: scale(0); opacity: 0; }
+/* 華麗配對成功動畫 */
+@keyframes match-explosion {
+    0% { transform: scale(1) rotateY(180deg); filter: brightness(1); }
+    40% { transform: scale(1.2) rotateY(180deg); filter: brightness(1.8) drop-shadow(0 0 10px gold); }
+    100% { transform: scale(0) rotateY(180deg); opacity: 0; }
 }
 
 .card.matched {
-    animation: matched-out 0.6s ease-in-out forwards;
+    animation: match-explosion 0.7s forwards;
     pointer-events: none;
 }
 
-/* 按鈕美化 */
 #reset-button {
     background: linear-gradient(to right, var(--chic-violet), var(--neon-red));
     color: white;
     border: none;
-    padding: 15px 40px;
-    border-radius: 30px;
-    font-size: 1.1em;
+    padding: 12px 30px;
+    border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
     box-shadow: 0 4px 15px rgba(225, 25, 39, 0.3);
 }
 
-#reset-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(225, 25, 39, 0.5);
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
 }
