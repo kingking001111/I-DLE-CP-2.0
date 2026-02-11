@@ -6,10 +6,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetButton = document.getElementById('reset-button');
     const gameOverModal = document.getElementById('game-over-modal');
     const closeModalButton = document.getElementById('close-modal-button');
+    const musicToggle = document.getElementById('music-toggle');
 
-    // 預載音樂
-    const bgm = new Audio('./images/bgm.mp3'); 
+    // 音樂控制
+    const bgm = new Audio('images/bgm.mp3'); 
     bgm.loop = true;
+    let isMusicPlaying = false;
+
+    musicToggle.addEventListener('click', () => {
+        if (isMusicPlaying) {
+            bgm.pause();
+            musicToggle.textContent = '🎵 音樂：關閉';
+            musicToggle.classList.remove('playing');
+        } else {
+            bgm.play();
+            musicToggle.textContent = '🎵 音樂：播放中';
+            musicToggle.classList.add('playing');
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
 
     const members = {
         "薇娟": ["miyeon/miyeon_01.jpg", "miyeon/miyeon_02.jpg", "miyeon/miyeon_03.jpg", "miyeon/miyeon_04.jpg", "miyeon/miyeon_05.jpg"],
@@ -23,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cpDatabase = [
         {"names": ["狗狗姊妹", "麵查"], "pair": ["薇娟", "米妮"]},
         {"names": ["穗面CP"], "pair": ["薇娟", "穗珍"]},
-        {"names": ["大小娟", "麵捲CP"], "pair": ["薇娟", "小娟"]},
+        {"names": ["麵捲CP", "大小娟"], "pair": ["薇娟", "小娟"]},
         {"names": ["姐弟Line"], "pair": ["薇娟", "雨琦"]},
         {"names": ["樹莓CP", "TJ"], "pair": ["薇娟", "舒華"]},
         {"names": ["宿命CP"], "pair": ["米妮", "穗珍"]},
@@ -48,28 +63,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initializeGame() {
-        // 第一次點擊網頁啟動音樂
-        document.body.addEventListener('click', () => bgm.play(), { once: true });
-
         gameBoard.innerHTML = '';
         flippedCards = [];
         matchedPairs = 0;
         gameOverModal.style.display = 'none';
         
-        // 隨機選 8 組 CP
+        // 隨機選 8 組 CP 玩
         availableCPs = shuffle([...cpDatabase]).slice(0, 8); 
         totalPairsSpan.textContent = availableCPs.length;
+
+        // 圖片池管理：確保每個成員的照片在此輪不重複
+        const pool = {};
+        Object.keys(members).forEach(m => pool[m] = shuffle([0, 1, 2, 3, 4]));
 
         let cardData = [];
         availableCPs.forEach(cp => {
             const [m1, m2] = cp.pair;
-            
-            // 隨機選不重複的照片編號
-            let pool = [0, 1, 2, 3, 4];
-            shuffle(pool);
-            const img1 = members[m1][pool[0]];
-            const img2 = members[m2][pool[1]];
-
+            const img1 = members[m1][pool[m1].pop()]; // 取出並移除，保證不重複
+            const img2 = members[m2][pool[m2].pop()];
             cardData.push({ member: m1, image: `./images/${img1}` });
             cardData.push({ member: m2, image: `./images/${img2}` });
         });
@@ -111,9 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
             matchedPairs++;
             matchedCountSpan.textContent = matchedPairs;
             availableCPs = availableCPs.filter(cp => cp !== currentCP);
-
             if (availableCPs.length === 0) {
-                setTimeout(() => { gameOverModal.style.display = 'flex'; }, 600);
+                setTimeout(() => gameOverModal.style.display = 'flex', 700);
             } else {
                 pickNewCPQuestion();
             }
@@ -127,8 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function pickNewCPQuestion() {
         if (availableCPs.length > 0) {
             currentCP = availableCPs[Math.floor(Math.random() * availableCPs.length)];
-            const names = currentCP.names;
-            cpQuestionSpan.textContent = names[Math.floor(Math.random() * names.length)];
+            cpQuestionSpan.textContent = currentCP.names[Math.floor(Math.random() * currentCP.names.length)];
         }
     }
 
